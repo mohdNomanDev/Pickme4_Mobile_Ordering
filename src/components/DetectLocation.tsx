@@ -1,26 +1,13 @@
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../theme/theme";
+import { styles } from "../styles/navbarStyles/DetectLocation.styles";
 
 export const DetectLocation = () => {
   return (
     <TouchableOpacity style={styles.container} onPress={() => console.log("Detecting location...")}>
-      <Ionicons name="locate-sharp" size={16} color="#FF6B6B" />
+      <Ionicons name="locate-sharp" size={16} color={Colors.primary} />
       <Text style={styles.text}>Detect Current Location</Text>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  text: {
-    fontSize: 14,
-    color: "#FF6B6B",
-    fontWeight: "600",
-    marginLeft: 6,
-  },
-});

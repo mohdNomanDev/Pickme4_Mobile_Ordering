@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { DetectLocation } from "./DetectLocation";
+import { Colors } from "../theme/theme";
+import { styles } from "../styles/navbarStyles/Address.styles";
 
 export const Address = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -12,11 +14,11 @@ export const Address = () => {
         style={styles.container} 
         onPress={() => setModalVisible(true)}
       >
-        <Ionicons name="location-sharp" size={18} color="#FF6B6B" />
+        <Ionicons name="location-sharp" size={18} color={Colors.primary} />
         <Text style={styles.addressText} numberOfLines={1}>
           Select Address
         </Text>
-        <Ionicons name="chevron-down" size={14} color="#636E72" />
+        <Ionicons name="chevron-down" size={14} color={Colors.textLight} />
       </TouchableOpacity>
 
       <Modal
@@ -32,13 +34,12 @@ export const Address = () => {
                 <View style={styles.modalHeader}>
                   <Text style={styles.modalTitle}>Choose Location</Text>
                   <TouchableOpacity onPress={() => setModalVisible(false)}>
-                    <Ionicons name="close" size={24} color="#2D3436" />
+                    <Ionicons name="close" size={24} color={Colors.text} />
                   </TouchableOpacity>
                 </View>
                 
                 <View style={styles.modalBody}>
                   <DetectLocation />
-                  {/* Additional features will be added here later */}
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -48,47 +49,3 @@ export const Address = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F1F2F6",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    maxWidth: 180,
-  },
-  addressText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#2D3436",
-    marginHorizontal: 4,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end", // Bottom sheet style
-  },
-  modalContent: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 20,
-    minHeight: 200,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: "#2D3436",
-  },
-  modalBody: {
-    gap: 12,
-  },
-});

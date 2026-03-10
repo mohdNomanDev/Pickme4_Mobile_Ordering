@@ -1,6 +1,7 @@
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { Pickme4Logo } from "./Pickme4Logo";
 import { Address } from "./Address";
+import { styles } from "../styles/navbarStyles/Navbar.styles";
 
 export const Navbar = () => {
   return (
@@ -10,16 +11,3 @@ export const Navbar = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    height: 70,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#F1F2F6",
-  },
-});
