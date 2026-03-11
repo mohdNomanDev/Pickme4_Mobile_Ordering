@@ -1,14 +1,16 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../../theme/theme";
+import { Colors, Spacing } from "../../theme/theme";
 import { styles } from "../../styles/profileStyles/MyProfile.styles";
+import { EditBtn } from "./EditBtn";
 
 interface MyProfileProps {
   name?: string;
   email?: string;
   phoneNumber?: string;
   imageUri?: string;
+  onEditPress?: () => void;
 }
 
 export const MyProfile: React.FC<MyProfileProps> = ({
@@ -16,6 +18,7 @@ export const MyProfile: React.FC<MyProfileProps> = ({
   email = "mohdnoman@example.com",
   phoneNumber = "+91 9876543210",
   imageUri,
+  onEditPress,
 }) => {
   return (
     <View style={styles.container}>
@@ -31,7 +34,7 @@ export const MyProfile: React.FC<MyProfileProps> = ({
 
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{name}</Text>
-        
+
         <View style={styles.contactInfo}>
           <Ionicons name="mail-outline" size={16} color={Colors.textLight} />
           <Text style={styles.subText}>{email}</Text>
@@ -41,9 +44,14 @@ export const MyProfile: React.FC<MyProfileProps> = ({
           <Ionicons name="call-outline" size={16} color={Colors.textLight} />
           <Text style={styles.subText}>{phoneNumber}</Text>
         </View>
+
+        <View style={{ marginTop: Spacing.md }}>
+          <EditBtn onPress={onEditPress} />
+        </View>
       </View>
 
       <View style={styles.divider} />
     </View>
   );
 };
+
