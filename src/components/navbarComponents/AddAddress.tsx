@@ -1,9 +1,11 @@
 import { Pressable, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../../theme/theme";
 import { styles } from "../../styles/navbarStyles/AddAddress.styles";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 export const AddAddress = () => {
+  const colors = useThemeColors();
+  
   return (
     <Pressable 
       style={({ pressed }) => [
@@ -12,10 +14,10 @@ export const AddAddress = () => {
       ]}
       onPress={() => console.log("Add address clicked")}
     >
-      <View style={styles.iconWrapper}>
-        <Ionicons name="add" size={18} color={Colors.primary} />
+      <View style={[styles.iconWrapper, { backgroundColor: colors.primaryLight }]}>
+        <Ionicons name="add" size={18} color={colors.primary} />
       </View>
-      <Text style={styles.text}>Add New Address</Text>
+      <Text style={[styles.text, { color: colors.primary }]}>Add New Address</Text>
     </Pressable>
   );
 };

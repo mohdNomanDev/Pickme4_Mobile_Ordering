@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { searchBarStyles } from "../../styles/navbarStyles/SearchBar.styles";
-import { Colors } from "../../theme/theme";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -13,6 +13,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = "Search food, grocery, etc...",
 }) => {
   const router = useRouter();
+  const colors = useThemeColors();
 
   return (
     <View
@@ -25,22 +26,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     >
       <View style={searchBarStyles.container}>
         <TouchableOpacity
-          style={searchBarStyles.searchBox}
+          style={[searchBarStyles.searchBox, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}
           activeOpacity={0.8}
           onPress={() => router.push("/(modals)/search")}
         >
           <Ionicons
             name="search"
             size={20}
-            color={Colors.primary}
+            color={colors.primary}
             style={searchBarStyles.icon}
           />
-          <Text style={searchBarStyles.input}>{placeholder}</Text>
-          <Ionicons name="mic-outline" size={20} color={Colors.textLight} />
+          <Text style={[searchBarStyles.input, { color: colors.text }]}>{placeholder}</Text>
+          <Ionicons name="mic-outline" size={20} color={colors.textLight} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={searchBarStyles.filterButton}>
-        <Ionicons name="options-outline" size={20} color={Colors.text} />
+      <TouchableOpacity style={[searchBarStyles.filterButton, { backgroundColor: colors.background, borderColor: colors.border }]}>
+        <Ionicons name="options-outline" size={20} color={colors.text} />
       </TouchableOpacity>
     </View>
   );

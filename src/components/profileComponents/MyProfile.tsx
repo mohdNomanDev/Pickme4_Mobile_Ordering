@@ -1,9 +1,10 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors, Spacing } from "../../theme/theme";
+import { Spacing } from "../../theme/theme";
 import { styles } from "../../styles/profileStyles/MyProfile.styles";
 import { EditBtn } from "./EditBtn";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 interface MyProfileProps {
   name?: string;
@@ -20,29 +21,31 @@ export const MyProfile: React.FC<MyProfileProps> = ({
   imageUri,
   onEditPress,
 }) => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>My Profile</Text>
+  const colors = useThemeColors();
 
-      <View style={styles.imageContainer}>
+  return (
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.heading, { color: colors.text }]}>My Profile</Text>
+
+      <View style={[styles.imageContainer, { backgroundColor: colors.surface, borderColor: colors.background }]}>
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.profileImage} />
         ) : (
-          <Ionicons name="person" size={50} color={Colors.textLight} />
+          <Ionicons name="person" size={50} color={colors.textLight} />
         )}
       </View>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
 
         <View style={styles.contactInfo}>
-          <Ionicons name="mail-outline" size={16} color={Colors.textLight} />
-          <Text style={styles.subText}>{email}</Text>
+          <Ionicons name="mail-outline" size={16} color={colors.textLight} />
+          <Text style={[styles.subText, { color: colors.textLight }]}>{email}</Text>
         </View>
 
         <View style={styles.contactInfo}>
-          <Ionicons name="call-outline" size={16} color={Colors.textLight} />
-          <Text style={styles.subText}>{phoneNumber}</Text>
+          <Ionicons name="call-outline" size={16} color={colors.textLight} />
+          <Text style={[styles.subText, { color: colors.textLight }]}>{phoneNumber}</Text>
         </View>
 
         <View style={{ marginTop: Spacing.md }}>
@@ -50,7 +53,7 @@ export const MyProfile: React.FC<MyProfileProps> = ({
         </View>
       </View>
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: colors.divider }]} />
     </View>
   );
 };
