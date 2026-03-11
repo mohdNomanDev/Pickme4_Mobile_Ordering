@@ -7,24 +7,26 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconWrapper: {
-    backgroundColor: Colors.primaryLight,
-    padding: 6,
-    borderRadius: 12,
+    backgroundColor: Colors.primary,
+    padding: 8,
+    borderRadius: 14,
     marginRight: Spacing.sm,
-    boxShadow: `0px 2px 4px ${Colors.primary}1A`, // 1A is ~0.1 opacity in hex
-    elevation: 2,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 4,
   },
   textContainer: {
     justifyContent: "center",
   },
   brandText: {
-    fontSize: 22,
-    fontWeight: "800",
+    fontSize: 24,
+    fontWeight: "900",
     color: Colors.text,
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
   },
   numberHighlight: {
     color: Colors.primary,
-    fontWeight: "900",
   },
 });

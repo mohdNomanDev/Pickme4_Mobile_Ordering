@@ -3,24 +3,42 @@ import { Colors, Spacing } from "../../theme/theme";
 
 export const searchBarStyles = StyleSheet.create({
   container: {
-    paddingVertical: Spacing.sm,
-    backgroundColor: Colors.background,
+    flex: 1,
+    paddingVertical: Spacing.xs,
   },
   searchBox: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.surface,
-    borderRadius: Spacing.sm,
-    paddingHorizontal: Spacing.md,
+    borderRadius: 25,
+    paddingHorizontal: Spacing.lg,
     height: 48,
+    borderWidth: 1,
+    borderBottomColor: Colors.border,
+    borderColor: 'transparent',
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: '500',
     color: Colors.text,
     marginLeft: Spacing.sm,
   },
   icon: {
-    marginRight: Spacing.xs,
+    marginRight: 0,
   },
+  filterButton: {
+    backgroundColor: Colors.background,
+    padding: 12,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
+  }
 });

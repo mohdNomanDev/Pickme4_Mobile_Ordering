@@ -1,40 +1,44 @@
-import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../theme/theme";
-import { styles } from "../styles/navbarStyles/SavedAddress.styles";
+import { Pressable, Text, View } from "react-native";
+import { styles } from "../../styles/navbarStyles/SavedAddress.styles";
+import { Colors } from "../../theme/theme";
 
 const MOCK_ADDRESSES = [
   {
-    id: '1',
-    label: 'Home',
-    details: '123, Maple Avenue, Springfield',
-    icon: 'home-outline' as const
+    id: "1",
+    label: "Home",
+    details: "123, Maple Avenue, Springfield",
+    icon: "home-outline" as const,
   },
   {
-    id: '2',
-    label: 'Office',
-    details: '456, Business Bay, Downtown',
-    icon: 'briefcase-outline' as const
-  }
+    id: "2",
+    label: "Office",
+    details: "456, Business Bay, Downtown",
+    icon: "briefcase-outline" as const,
+  },
 ];
 
 export const SavedAddress = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Saved Addresses</Text>
-      
+
       <View style={styles.addressList}>
         {MOCK_ADDRESSES.map((address) => (
-          <Pressable 
+          <Pressable
             key={address.id}
             style={({ pressed }) => [
               styles.addressItem,
-              { opacity: pressed ? 0.7 : 1 }
+              { opacity: pressed ? 0.7 : 1 },
             ]}
             onPress={() => console.log(`Selected address: ${address.label}`)}
           >
             <View style={styles.iconWrapper}>
-              <Ionicons name={address.icon} size={18} color={Colors.textLight} />
+              <Ionicons
+                name={address.icon}
+                size={18}
+                color={Colors.textLight}
+              />
             </View>
             <View style={styles.addressInfo}>
               <Text style={styles.label}>{address.label}</Text>

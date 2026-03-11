@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { DetectLocation } from "./DetectLocation";
 import { AddAddress } from "./AddAddress";
 import { SavedAddress } from "./SavedAddress";
-import { Colors } from "../theme/theme";
-import { styles } from "../styles/navbarStyles/Address.styles";
+import { Colors } from "../../theme/theme";
+import { styles } from "../../styles/navbarStyles/Address.styles";
 
 export const Address = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -15,15 +15,18 @@ export const Address = () => {
       <Pressable 
         style={({ pressed }) => [
           styles.container,
-          { opacity: pressed ? 0.7 : 1 }
+          { opacity: pressed ? 0.8 : 1 }
         ]} 
         onPress={() => setModalVisible(true)}
       >
-        <Ionicons name="location-sharp" size={18} color={Colors.primary} />
-        <Text style={styles.addressText} numberOfLines={1}>
-          Select Address
-        </Text>
-        <Ionicons name="chevron-down" size={14} color={Colors.textLight} />
+        <Ionicons name="location" size={18} color={Colors.primary} />
+        <View style={styles.addressContent}>
+          <Text style={styles.label}>Deliver to</Text>
+          <Text style={styles.addressText} numberOfLines={1}>
+            Select Address
+          </Text>
+        </View>
+        <Ionicons name="chevron-down" size={14} color={Colors.primary} />
       </Pressable>
 
       <Modal

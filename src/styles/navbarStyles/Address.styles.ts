@@ -5,17 +5,27 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.primaryLight,
     paddingHorizontal: Spacing.md,
-    paddingVertical: 6,
-    borderRadius: 20,
-    maxWidth: 180,
+    paddingVertical: 8,
+    borderRadius: 12,
+    maxWidth: 200,
+  },
+  addressContent: {
+    flexDirection: "column",
+    marginHorizontal: Spacing.xs,
+  },
+  label: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: Colors.primary,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   addressText: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 13,
+    fontWeight: "700",
     color: Colors.text,
-    marginHorizontal: Spacing.xs,
   },
   modalOverlay: {
     flex: 1,
@@ -27,7 +37,7 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: Spacing.xl,
-    minHeight: 200,
+    minHeight: 300,
   },
   modalHeader: {
     flexDirection: "row",
@@ -36,8 +46,8 @@ export const styles = StyleSheet.create({
     marginBottom: Spacing.xl,
   },
   modalTitle: {
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: 20,
+    fontWeight: "900",
     color: Colors.text,
   },
   modalBody: {

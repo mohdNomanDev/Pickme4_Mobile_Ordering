@@ -1,13 +1,13 @@
-import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../theme/theme";
-import { styles } from "../styles/navbarStyles/Pickme4Logo.styles";
+import { Text, View } from "react-native";
+import { styles } from "../../styles/navbarStyles/Pickme4Logo.styles";
+import { Colors } from "../../theme/theme";
 
 export const Pickme4Logo = () => {
   return (
     <View style={styles.container}>
       <View style={styles.iconWrapper}>
-        <Ionicons name="cart" size={24} color={Colors.primary} />
+        <Ionicons name="flash" size={20} color={Colors.background} />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.brandText}>

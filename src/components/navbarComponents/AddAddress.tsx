@@ -1,7 +1,7 @@
 import { Pressable, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../theme/theme";
-import { styles } from "../styles/navbarStyles/AddAddress.styles";
+import { Colors } from "../../theme/theme";
+import { styles } from "../../styles/navbarStyles/AddAddress.styles";
 
 export const AddAddress = () => {
   return (
