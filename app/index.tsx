@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect } from "expo-router";
 
 export default function Index() {
   // You can add logic here to check if the user is authenticated

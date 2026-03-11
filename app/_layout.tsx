@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
-import { Provider } from 'react-redux';
-import { store } from '../src/store/store';
+import { Provider } from "react-redux";
+import { store } from "../src/store/store";
 
 export default function RootLayout() {
   return (
@@ -15,12 +15,12 @@ export default function RootLayout() {
             headerTitle: 'Checkout'
           }} 
         /> */}
-        <Stack.Screen 
-          name="(modals)/search" 
-          options={{ 
-            presentation: 'fullScreenModal',
-            headerShown: false
-          }} 
+        <Stack.Screen
+          name="(modals)/search"
+          options={{
+            presentation: "fullScreenModal",
+            headerShown: false,
+          }}
         />
         {/* <Stack.Screen name="restaurant/[id]" options={{ headerTitle: 'Restaurant' }} /> */}
       </Stack>
