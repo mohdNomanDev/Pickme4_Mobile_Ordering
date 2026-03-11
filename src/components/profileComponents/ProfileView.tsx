@@ -5,7 +5,7 @@ import { MyProfile } from "./MyProfile";
 import { Colors } from "../../theme/theme";
 import { styles } from "../../styles/profileStyles/Profile.styles";
 
-export const Profile = () => {
+export const ProfileView = () => {
   const MENU_ITEMS = [
     { icon: "cart-outline", label: "My Orders" },
     { icon: "location-outline", label: "My Addresses" },

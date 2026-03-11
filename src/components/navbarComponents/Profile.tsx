@@ -4,7 +4,7 @@ import { Image, TouchableOpacity, Modal, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "../../styles/navbarStyles/Profile.styles";
 import { Colors } from "../../theme/theme";
-import { Profile as ProfileView } from "../profileComponents/Profile";
+import { ProfileView } from "../profileComponents/ProfileView";
 
 interface ProfileProps {
   imageUri?: string;
