@@ -11,10 +11,7 @@ export const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 14,
     marginRight: Spacing.sm,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
+    boxShadow: "0 4 5 rgba(255, 107, 107, 0.3)",
     elevation: 4,
   },
   textContainer: {

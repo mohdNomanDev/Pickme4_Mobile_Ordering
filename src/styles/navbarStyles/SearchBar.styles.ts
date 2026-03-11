@@ -35,10 +35,7 @@ export const searchBarStyles = StyleSheet.create({
     borderColor: Colors.border,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
+    boxShadow: "0 2 5 rgba(0, 0, 0, 0.05)",
     elevation: 2,
   }
 });

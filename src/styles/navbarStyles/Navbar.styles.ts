@@ -9,10 +9,7 @@ export const styles = StyleSheet.create({
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    boxShadow: "0 2 10 rgba(0, 0, 0, 0.05)",
     elevation: 3,
   },
   topRow: {
