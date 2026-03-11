@@ -1,51 +1,46 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { MyProfile } from "./MyProfile";
-import { Colors } from "../../theme/theme";
+import { ScrollView, Text, View } from "react-native";
 import { styles } from "../../styles/profileStyles/Profile.styles";
+import { MyProfile } from "./MyProfile";
+
+// Import new components
+import { About } from "./About";
+import { Appearance } from "./Appearance";
+import { CouponsOffers } from "./CouponsOffers";
+import { Logout } from "./Logout";
+import { MySubscription } from "./MySubscription";
+import { PaymentMethods } from "./PaymentMethods";
+import { SendFeedback } from "./SendFeedback";
+import { Settings } from "./Settings";
+import { YourFeedback } from "./YourFeedback";
 
 export const ProfileView = () => {
-  const MENU_ITEMS = [
-    { icon: "cart-outline", label: "My Orders" },
-    { icon: "location-outline", label: "My Addresses" },
-    { icon: "card-outline", label: "Payment Methods" },
-    { icon: "notifications-outline", label: "Notifications" },
-    { icon: "help-circle-outline", label: "Help & Support" },
-    { icon: "settings-outline", label: "Settings" },
-    { icon: "log-out-outline", label: "Logout", color: Colors.primary },
-  ];
-
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <MyProfile />
-      
-      <Text style={styles.sectionTitle}>Account</Text>
-      
-      <View style={styles.menuContainer}>
-        {MENU_ITEMS.map((item, index) => (
-          <React.Fragment key={index}>
-            <TouchableOpacity style={styles.menuItem}>
-              <View style={styles.menuItemLeft}>
-                <Ionicons 
-                  name={item.icon as any} 
-                  size={22} 
-                  color={item.color || Colors.text} 
-                />
-                <Text style={[
-                  styles.menuItemText,
-                  item.color ? { color: item.color } : {}
-                ]}>
-                  {item.label}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color={Colors.divider} />
-            </TouchableOpacity>
-            {index < MENU_ITEMS.length - 1 && <View style={styles.menuItemDivider} />}
-          </React.Fragment>
-        ))}
+
+      <Text style={styles.sectionTitle}>Subscription & Rewards</Text>
+      <MySubscription />
+      <CouponsOffers />
+
+      <Text style={styles.sectionTitle}>Account & Payments</Text>
+      <PaymentMethods />
+
+      <Text style={styles.sectionTitle}>Preferences</Text>
+      <Appearance />
+      <Settings />
+
+      <Text style={styles.sectionTitle}>Feedback & Support</Text>
+      <YourFeedback />
+      <SendFeedback />
+
+      <Text style={styles.sectionTitle}>App Info</Text>
+      <About />
+
+      <View style={{ marginTop: 20 }}>
+        <Logout />
       </View>
-      
+
       <View style={{ height: 40 }} />
     </ScrollView>
   );
