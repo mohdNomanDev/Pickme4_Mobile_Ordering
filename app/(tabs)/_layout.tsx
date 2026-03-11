@@ -3,7 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: "green" }}>
       <Tabs.Screen
         name="home"
         options={{
