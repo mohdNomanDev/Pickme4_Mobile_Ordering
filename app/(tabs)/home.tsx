@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { Navbar } from "../src/components/Navbar";
+import { Navbar } from "../../src/components/Navbar";
 
 export default function Home() {
   return (
