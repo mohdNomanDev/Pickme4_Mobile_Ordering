@@ -7,8 +7,8 @@ export default function RootLayout() {
     <Provider store={store}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen 
+        {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen 
           name="(modals)/checkout" 
           options={{ 
             presentation: 'modal',
@@ -23,7 +23,6 @@ export default function RootLayout() {
           }} 
         />
         {/* <Stack.Screen name="restaurant/[id]" options={{ headerTitle: 'Restaurant' }} /> */}
-
       </Stack>
     </Provider>
   );
