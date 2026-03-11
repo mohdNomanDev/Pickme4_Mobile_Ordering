@@ -1,9 +1,9 @@
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { styles } from "../../styles/navbarStyles/Navbar.styles";
-import { Colors } from "../../theme/theme";
 import { Address } from "./Address";
 import { Pickme4Logo } from "./Pickme4Logo";
 import { SearchBar } from "./SearchBar";
+import { Profile } from "./Profile";
 
 export const Navbar = () => {
   return (
@@ -11,13 +11,7 @@ export const Navbar = () => {
       <View style={styles.topRow}>
         <Pickme4Logo />
         <Address />
-        <TouchableOpacity
-          style={{
-            padding: 8,
-            backgroundColor: Colors.surface,
-            borderRadius: 12,
-          }}
-        ></TouchableOpacity>
+        <Profile />
       </View>
       <SearchBar />
     </View>
