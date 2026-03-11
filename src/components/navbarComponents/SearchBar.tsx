@@ -40,9 +40,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <Ionicons name="mic-outline" size={20} color={colors.textLight} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={[searchBarStyles.filterButton, { backgroundColor: colors.background, borderColor: colors.border }]}>
+      <TouchableOpacity style={[searchBarStyles.filterButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <Ionicons name="options-outline" size={20} color={colors.text} />
       </TouchableOpacity>
     </View>
   );
 };
+

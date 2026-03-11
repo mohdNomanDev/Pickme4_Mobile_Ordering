@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Colors, Spacing } from '../../src/theme/theme';
+import { Spacing } from '../../src/theme/theme';
+import { useThemeColors } from '../../src/hooks/useThemeColors';
 
 const RECENT_SEARCHES = ['Pizza', 'Burger', 'Sushi', 'Pasta'];
 const FOOD_RECOMMENDATIONS = ['Biryani', 'Chicken Tikka', 'Paneer Butter Masala', 'Dosa', 'Chole Bhature', 'Momos'];
@@ -11,25 +12,27 @@ const FOOD_RECOMMENDATIONS = ['Biryani', 'Chicken Tikka', 'Paneer Butter Masala'
 export default function SearchModal() {
   const router = useRouter();
   const [query, setQuery] = useState('');
+  const colors = useThemeColors();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={Colors.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <View style={styles.searchBox}>
-          <Ionicons name="search" size={20} color={Colors.textLight} />
+        <View style={[styles.searchBox, { backgroundColor: colors.surface }]}>
+          <Ionicons name="search" size={20} color={colors.textLight} />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: colors.text }]}
             placeholder="Search for restaurants or dishes..."
+            placeholderTextColor={colors.textLight}
             autoFocus
             value={query}
             onChangeText={setQuery}
           />
           {query.length > 0 && (
             <TouchableOpacity onPress={() => setQuery('')}>
-              <Ionicons name="close-circle" size={20} color={Colors.textLight} />
+              <Ionicons name="close-circle" size={20} color={colors.textLight} />
             </TouchableOpacity>
           )}
         </View>
@@ -38,12 +41,12 @@ export default function SearchModal() {
       <View style={styles.content}>
         {/* Recent Searches */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent searches</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Recent searches</Text>
           <View style={styles.listContainer}>
             {RECENT_SEARCHES.map((item, index) => (
               <TouchableOpacity key={index} style={styles.recentItem}>
-                <Ionicons name="time-outline" size={18} color={Colors.textLight} />
-                <Text style={styles.recentText}>{item}</Text>
+                <Ionicons name="time-outline" size={18} color={colors.textLight} />
+                <Text style={[styles.recentText, { color: colors.textLight }]}>{item}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -51,7 +54,7 @@ export default function SearchModal() {
 
         {/* What's on your mind? */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>What's on your Mind?</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>What's on your Mind?</Text>
           <FlatList
             data={FOOD_RECOMMENDATIONS}
             keyExtractor={(item) => item}
@@ -59,10 +62,10 @@ export default function SearchModal() {
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.foodItem}>
-                <View style={styles.foodIconPlaceholder}>
-                   <Ionicons name="restaurant-outline" size={24} color={Colors.primary} />
+                <View style={[styles.foodIconPlaceholder, { backgroundColor: colors.primaryLight }]}>
+                   <Ionicons name="restaurant-outline" size={24} color={colors.primary} />
                 </View>
-                <Text style={styles.foodText}>{item}</Text>
+                <Text style={[styles.foodText, { color: colors.text }]}>{item}</Text>
               </TouchableOpacity>
             )}
             contentContainerStyle={styles.foodList}
@@ -76,7 +79,6 @@ export default function SearchModal() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -84,7 +86,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
   },
   backButton: {
     marginRight: Spacing.md,
@@ -93,7 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
     borderRadius: Spacing.sm,
     paddingHorizontal: Spacing.md,
     height: 44,
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: Spacing.sm,
     fontSize: 16,
-    color: Colors.text,
   },
   content: {
     flex: 1,
@@ -114,7 +113,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: Colors.text,
     paddingHorizontal: Spacing.lg,
     marginBottom: Spacing.md,
   },
@@ -129,7 +127,6 @@ const styles = StyleSheet.create({
   recentText: {
     marginLeft: Spacing.sm,
     fontSize: 16,
-    color: Colors.textLight,
   },
   foodList: {
     paddingHorizontal: Spacing.lg,
@@ -143,14 +140,12 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: Colors.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.xs,
   },
   foodText: {
     fontSize: 12,
-    color: Colors.text,
     textAlign: 'center',
   },
 });
