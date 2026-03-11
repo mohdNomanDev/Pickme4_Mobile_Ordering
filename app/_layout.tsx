@@ -14,8 +14,16 @@ export default function RootLayout() {
             presentation: 'modal',
             headerTitle: 'Checkout'
           }} 
+        /> */}
+        <Stack.Screen 
+          name="(modals)/search" 
+          options={{ 
+            presentation: 'fullScreenModal',
+            headerShown: false
+          }} 
         />
-        <Stack.Screen name="restaurant/[id]" options={{ headerTitle: 'Restaurant' }} /> */}
+        {/* <Stack.Screen name="restaurant/[id]" options={{ headerTitle: 'Restaurant' }} /> */}
+
       </Stack>
     </Provider>
   );
