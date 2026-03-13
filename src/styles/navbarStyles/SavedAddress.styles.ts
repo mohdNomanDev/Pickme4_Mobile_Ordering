@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     gap: Spacing.lg,
   },
   cardWrapper: {
-    width: Platform.OS === "web" ? "calc(33.333% - 11px)" : "100%",
+    width: (Platform.OS === "web" ? "calc(33.333% - 11px)" : "100%") as any,
     minWidth: Platform.OS === "web" ? 320 : "100%",
   },
   card: {
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
       web: {
         cursor: "pointer",
         transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
-      },
+      } as any,
     }),
   },
   iconContainer: {

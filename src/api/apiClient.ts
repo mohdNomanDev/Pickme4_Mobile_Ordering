@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios/dist/axios';
+import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
