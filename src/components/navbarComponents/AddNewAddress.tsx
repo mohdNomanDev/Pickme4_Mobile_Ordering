@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -22,21 +22,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { ThemeColors } from '../../theme/theme';
 import { styles } from '../../styles/navbarStyles/AddNewAddress.styles';
+import { useAddressForm } from '../../hooks/useAddressForm';
 
 // --- Types ---
-interface AddressForm {
-  label: string;
-  buildingNumber: string;
-  streetName: string;
-  district: string;
-  city: string;
-  region: string;
-  postalCode: string;
-  secondaryNumber: string;
-  deliveryInstructions: string;
-  isDefault: boolean;
-}
-
 interface AnimatedButtonProps {
   onPress: () => void;
   title: string;
@@ -50,6 +38,7 @@ interface InputFieldProps extends TextInputProps {
   theme: ThemeColors;
   halfWidth?: boolean;
   error?: string;
+  touched?: boolean;
   style?: TextStyle;
 }
 
@@ -117,14 +106,16 @@ const InputField: React.FC<InputFieldProps> = ({
   theme, 
   halfWidth, 
   error, 
+  touched,
   style,
   ...props 
 }) => {
   const isFocused = useSharedValue(0);
+  const showError = touched && error;
 
   const borderAnimatedStyle = useAnimatedStyle(() => ({
     borderColor: withTiming(
-      error ? '#EF4444' : (isFocused.value ? theme.primary : theme.border), 
+      showError ? '#EF4444' : (isFocused.value ? theme.primary : theme.border), 
       { duration: 300 }
     ),
   }));
@@ -141,7 +132,7 @@ const InputField: React.FC<InputFieldProps> = ({
           {...props}
         />
       </Animated.View>
-      {error && (
+      {showError && (
         <Text style={{ color: '#EF4444', fontSize: 10, marginTop: 4, fontWeight: '600' }}>
           {error}
         </Text>
@@ -154,57 +145,7 @@ const InputField: React.FC<InputFieldProps> = ({
 export default function AddAddressForm() {
   const theme = useThemeColors();
   const router = useRouter();
-  const [errors, setErrors] = useState<Partial<Record<keyof AddressForm, string>>>({});
-  
-  const [form, setForm] = useState<AddressForm>({
-    label: 'Home',
-    buildingNumber: '',
-    streetName: '',
-    district: '',
-    city: '',
-    region: '',
-    postalCode: '',
-    secondaryNumber: '',
-    deliveryInstructions: '',
-    isDefault: false,
-  });
-
-  const updateForm = (key: keyof AddressForm, value: string | boolean) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-    // Clear error when user starts typing
-    if (errors[key]) {
-      setErrors((prev) => ({ ...prev, [key]: undefined }));
-    }
-  };
-
-  const validate = () => {
-    const newErrors: Partial<Record<keyof AddressForm, string>> = {};
-    const requiredFields: (keyof AddressForm)[] = [
-      'buildingNumber', 
-      'streetName', 
-      'district', 
-      'city', 
-      'postalCode', 
-      'region'
-    ];
-
-    requiredFields.forEach(field => {
-      if (!form[field]) {
-        newErrors[field] = 'Required';
-      }
-    });
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSave = () => {
-    if (validate()) {
-      console.log('Saving address data:', form);
-      // Simulate successful save and go back
-      router.back();
-    }
-  };
+  const formik = useAddressForm();
 
   return (
     <ScrollView 
@@ -219,9 +160,12 @@ export default function AddAddressForm() {
         <InputField 
           label="LABEL (e.g., Home, Work)" 
           theme={theme} 
-          value={form.label} 
-          onChangeText={(t) => updateForm('label', t)} 
+          value={formik.values.label} 
+          onChangeText={formik.handleChange('label')} 
+          onBlur={formik.handleBlur('label')}
           placeholder="e.g. Home"
+          error={formik.errors.label}
+          touched={formik.touched.label}
         />
         
         <View style={styles.row}>
@@ -229,20 +173,24 @@ export default function AddAddressForm() {
             label="BUILDING NUMBER *" 
             theme={theme} 
             halfWidth 
-            value={form.buildingNumber} 
-            onChangeText={(t) => updateForm('buildingNumber', t)} 
+            value={formik.values.buildingNumber} 
+            onChangeText={formik.handleChange('buildingNumber')} 
+            onBlur={formik.handleBlur('buildingNumber')}
             keyboardType="numeric" 
             placeholder="e.g. 4921"
-            error={errors.buildingNumber}
+            error={formik.errors.buildingNumber}
+            touched={formik.touched.buildingNumber}
           />
           <InputField 
             label="STREET NAME *" 
             theme={theme} 
             halfWidth 
-            value={form.streetName} 
-            onChangeText={(t) => updateForm('streetName', t)} 
+            value={formik.values.streetName} 
+            onChangeText={formik.handleChange('streetName')} 
+            onBlur={formik.handleBlur('streetName')}
             placeholder="e.g. Al Tharthar Rd"
-            error={errors.streetName}
+            error={formik.errors.streetName}
+            touched={formik.touched.streetName}
           />
         </View>
 
@@ -251,19 +199,23 @@ export default function AddAddressForm() {
             label="DISTRICT *" 
             theme={theme} 
             halfWidth 
-            value={form.district} 
-            onChangeText={(t) => updateForm('district', t)} 
+            value={formik.values.district} 
+            onChangeText={formik.handleChange('district')} 
+            onBlur={formik.handleBlur('district')}
             placeholder="e.g. Al Zahra"
-            error={errors.district}
+            error={formik.errors.district}
+            touched={formik.touched.district}
           />
           <InputField 
             label="CITY *" 
             theme={theme} 
             halfWidth 
-            value={form.city} 
-            onChangeText={(t) => updateForm('city', t)} 
+            value={formik.values.city} 
+            onChangeText={formik.handleChange('city')} 
+            onBlur={formik.handleBlur('city')}
             placeholder="e.g. Riyadh"
-            error={errors.city}
+            error={formik.errors.city}
+            touched={formik.touched.city}
           />
         </View>
 
@@ -272,39 +224,46 @@ export default function AddAddressForm() {
             label="POSTAL CODE *" 
             theme={theme} 
             halfWidth 
-            value={form.postalCode} 
-            onChangeText={(t) => updateForm('postalCode', t)} 
+            value={formik.values.postalCode} 
+            onChangeText={formik.handleChange('postalCode')} 
+            onBlur={formik.handleBlur('postalCode')}
             keyboardType="numeric" 
             placeholder="e.g. 12345"
-            error={errors.postalCode}
+            error={formik.errors.postalCode}
+            touched={formik.touched.postalCode}
           />
           <InputField 
             label="REGION *" 
             theme={theme} 
             halfWidth 
-            value={form.region} 
-            onChangeText={(t) => updateForm('region', t)} 
+            value={formik.values.region} 
+            onChangeText={formik.handleChange('region')} 
+            onBlur={formik.handleBlur('region')}
             placeholder="e.g. Central"
-            error={errors.region}
+            error={formik.errors.region}
+            touched={formik.touched.region}
           />
         </View>
 
         <InputField 
           label="DELIVERY INSTRUCTIONS" 
           theme={theme} 
-          value={form.deliveryInstructions} 
-          onChangeText={(t) => updateForm('deliveryInstructions', t)} 
+          value={formik.values.deliveryInstructions} 
+          onChangeText={formik.handleChange('deliveryInstructions')} 
+          onBlur={formik.handleBlur('deliveryInstructions')}
           multiline 
           numberOfLines={3} 
           style={{ height: 80, textAlignVertical: 'top' }} 
           placeholder="e.g. Near the mosque"
+          error={formik.errors.deliveryInstructions}
+          touched={formik.touched.deliveryInstructions}
         />
 
         <View style={[styles.switchContainer, { borderTopColor: theme.border }]}>
           <Text style={[styles.switchLabel, { color: theme.text }]}>Set as default address</Text>
           <Switch
-            value={form.isDefault}
-            onValueChange={(v) => updateForm('isDefault', v)}
+            value={formik.values.isDefault}
+            onValueChange={(v) => formik.setFieldValue('isDefault', v)}
             trackColor={{ false: theme.border, true: theme.primary }}
             thumbColor={'#FFFFFF'}
           />
@@ -324,7 +283,7 @@ export default function AddAddressForm() {
               title="SAVE ADDRESS" 
               theme={theme} 
               isPrimary={true} 
-              onPress={handleSave} 
+              onPress={formik.handleSubmit} 
               icon="save-outline"
             />
           </View>
