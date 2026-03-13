@@ -84,7 +84,7 @@ export const Address = () => {
               
               <View style={styles.modalBody}>
                 <DetectLocation />
-                <AddAddress />
+                <AddAddress onPress={() => setModalVisible(false)} />
                 <SavedAddress />
               </View>
             </Animated.View>

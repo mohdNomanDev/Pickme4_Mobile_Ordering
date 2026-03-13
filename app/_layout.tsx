@@ -22,6 +22,13 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="(modals)/add-address"
+          options={{
+            presentation: "modal",
+            headerShown: false,
+          }}
+        />
         {/* <Stack.Screen name="restaurant/[id]" options={{ headerTitle: 'Restaurant' }} /> */}
       </Stack>
     </Provider>

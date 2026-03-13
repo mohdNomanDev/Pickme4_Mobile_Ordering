@@ -10,6 +10,7 @@ import {
   TextInputProps,
   TextStyle,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import Animated, {
   FadeInDown,
   useSharedValue,
@@ -152,6 +153,7 @@ const InputField: React.FC<InputFieldProps> = ({
 // --- Main Form Component ---
 export default function AddAddressForm() {
   const theme = useThemeColors();
+  const router = useRouter();
   const [errors, setErrors] = useState<Partial<Record<keyof AddressForm, string>>>({});
   
   const [form, setForm] = useState<AddressForm>({
@@ -199,7 +201,8 @@ export default function AddAddressForm() {
   const handleSave = () => {
     if (validate()) {
       console.log('Saving address data:', form);
-      // Add API submission logic here
+      // Simulate successful save and go back
+      router.back();
     }
   };
 
@@ -209,15 +212,6 @@ export default function AddAddressForm() {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      <Animated.View entering={FadeInDown.duration(800).springify()}>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>
-          ADD NEW ADDRESS
-        </Text>
-        <Text style={[styles.headerSubtitle, { color: theme.textLight }]}>
-          Enter your delivery details below.
-        </Text>
-      </Animated.View>
-
       <Animated.View 
         entering={FadeInDown.delay(100).duration(800).springify()}
         style={styles.formGrid}
@@ -322,7 +316,7 @@ export default function AddAddressForm() {
               title="CANCEL" 
               theme={theme} 
               isPrimary={false} 
-              onPress={() => console.log('Cancel')} 
+              onPress={() => router.back()} 
             />
           </View>
           <View style={{ flex: 2, marginLeft: 8 }}>
