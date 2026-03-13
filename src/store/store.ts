@@ -4,6 +4,7 @@ import authReducer from './slices/authSlice';
 import cartReducer from './slices/cartSlice';
 import themeReducer from './slices/themeSlice';
 import userReducer from './slices/userSlice';
+import addressesReducer from './slices/addressesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     cart: cartReducer,
     theme: themeReducer,
     user: userReducer,
+    addresses: addressesReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

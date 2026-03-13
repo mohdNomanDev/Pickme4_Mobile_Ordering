@@ -1,5 +1,6 @@
 import { api } from "@/api/apiClient";
 import { setProfile } from "@/store/slices/userSlice";
+import { setAddresses } from "@/store/slices/addressesSlice";
 import { useAppDispatch } from "@/store/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -15,6 +16,7 @@ export default function TabLayout() {
         console.log("User profile data fetched:", data);
         if (data) {
           dispatch(setProfile(data));
+          dispatch(setAddresses(data.addresses));
         }
       } catch (error) {
         console.error(error);
