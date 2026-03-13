@@ -1,62 +1,58 @@
-import { StyleSheet } from "react-native";
-import { Colors, Spacing } from "../../theme/theme";
+import { StyleSheet, Platform } from "react-native";
+import { Spacing } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
   container: {
-    padding: Spacing.xl,
-    backgroundColor: Colors.background,
-    borderRadius: 20,
+    paddingVertical: Spacing.xl,
     alignItems: "center",
   },
   heading: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: Colors.text,
+    fontSize: 28,
+    fontWeight: "900",
     marginBottom: Spacing.xl,
     alignSelf: "flex-start",
+    letterSpacing: -1,
   },
   imageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: Colors.surface,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 4,
     marginBottom: Spacing.lg,
-    boxShadow: "0 4 10 rgba(0, 0, 0, 0.1)",
-    elevation: 4,
-    borderWidth: 3,
-    borderColor: Colors.background,
+    boxShadow: "0 8 25 rgba(0, 0, 0, 0.1)",
+    elevation: 10,
   },
   profileImage: {
     width: "100%",
     height: "100%",
-    borderRadius: 50,
+    borderRadius: 55,
   },
   infoContainer: {
     alignItems: "center",
-    gap: Spacing.xs,
+    width: "100%",
   },
   name: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: Colors.text,
+    fontSize: 22,
+    fontWeight: "800",
+    marginBottom: Spacing.xs,
+    letterSpacing: -0.5,
   },
   contactInfo: {
     flexDirection: "row",
     alignItems: "center",
-    gap: Spacing.xs,
+    gap: 8,
+    marginBottom: 4,
   },
   subText: {
     fontSize: 14,
-    color: Colors.textLight,
     fontWeight: "500",
   },
   divider: {
-    height: 1,
-    backgroundColor: Colors.divider,
     width: "100%",
-    marginVertical: Spacing.lg,
-    opacity: 0.5,
+    height: 1,
+    marginTop: Spacing.xxl,
+    opacity: 0.1,
   },
 });

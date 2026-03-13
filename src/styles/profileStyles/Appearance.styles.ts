@@ -1,41 +1,45 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { Spacing } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
   container: {
-    padding: Spacing.md,
-    borderRadius: 12,
-    marginVertical: Spacing.xs,
+    padding: 16,
+    borderRadius: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: Spacing.md,
+    marginBottom: 16,
+    gap: 12,
   },
   text: {
     fontSize: 16,
-    marginLeft: Spacing.md,
-    fontWeight: '600',
+    fontWeight: '700',
+    letterSpacing: -0.2,
   },
   optionsContainer: {
     flexDirection: 'row',
+    gap: 10,
     justifyContent: 'space-between',
-    gap: Spacing.sm,
   },
   optionButton: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
-    borderRadius: 8,
-    borderWidth: 1,
+    padding: 12,
+    borderRadius: 16,
+    borderWidth: 1.5,
     borderColor: 'transparent',
-    gap: Spacing.xs,
+    gap: 6,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+      } as any,
+    }),
   },
   optionText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '700',
   },
 });

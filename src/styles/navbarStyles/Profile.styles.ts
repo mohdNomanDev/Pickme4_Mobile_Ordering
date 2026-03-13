@@ -1,22 +1,32 @@
-import { StyleSheet } from "react-native";
-import { Colors, Spacing } from "../../theme/theme";
+import { StyleSheet, Platform } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    width: 42,
-    height: 42,
-    borderRadius: 14,
-    backgroundColor: Colors.surface,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: Colors.border,
-    boxShadow: "0 2 5 rgba(0, 0, 0, 0.05)",
-    elevation: 2,
+    borderWidth: 2,
+    boxShadow: "0 4 6 rgba(0, 0, 0, 0.1)",
+    elevation: 4,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      } as any,
+    }),
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 14,
+    borderRadius: 24,
   },
+  modalHeader: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    paddingHorizontal: 20, 
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+  }
 });

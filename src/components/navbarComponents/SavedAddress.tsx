@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { styles } from "../../styles/navbarStyles/SavedAddress.styles";
 import { useThemeColors } from "../../hooks/useThemeColors";
 
@@ -18,6 +19,46 @@ const MOCK_ADDRESSES = [
   },
 ];
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+const AddressItem = ({ address, colors }: { address: any, colors: any }) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  return (
+    <AnimatedPressable
+      style={[
+        styles.addressItem,
+        animatedStyle,
+        { backgroundColor: colors.background, borderColor: colors.border },
+      ]}
+      onPressIn={() => (scale.value = withSpring(0.97, { damping: 15 }))}
+      onPressOut={() => (scale.value = withSpring(1, { damping: 15 }))}
+      onPress={() => console.log(`Selected address: ${address.label}`)}
+    >
+      <View style={[styles.iconWrapper, { backgroundColor: colors.surface }]}>
+        <Ionicons
+          name={address.icon}
+          size={22}
+          color={colors.text}
+        />
+      </View>
+      <View style={styles.addressInfo}>
+        <Text style={[styles.label, { color: colors.text }]}>{address.label}</Text>
+        <Text style={[styles.details, { color: colors.textLight }]} numberOfLines={1}>
+          {address.details}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color={colors.textLight} />
+    </AnimatedPressable>
+  );
+};
+
 export const SavedAddress = () => {
   const colors = useThemeColors();
 
@@ -27,29 +68,7 @@ export const SavedAddress = () => {
 
       <View style={styles.addressList}>
         {MOCK_ADDRESSES.map((address) => (
-          <Pressable
-            key={address.id}
-            style={({ pressed }) => [
-              styles.addressItem,
-              { opacity: pressed ? 0.7 : 1, backgroundColor: colors.background, borderColor: colors.border },
-            ]}
-            onPress={() => console.log(`Selected address: ${address.label}`)}
-          >
-            <View style={[styles.iconWrapper, { backgroundColor: colors.surface }]}>
-              <Ionicons
-                name={address.icon}
-                size={18}
-                color={colors.textLight}
-              />
-            </View>
-            <View style={styles.addressInfo}>
-              <Text style={[styles.label, { color: colors.text }]}>{address.label}</Text>
-              <Text style={[styles.details, { color: colors.textLight }]} numberOfLines={1}>
-                {address.details}
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={colors.divider} />
-          </Pressable>
+          <AddressItem key={address.id} address={address} colors={colors} />
         ))}
       </View>
     </View>

@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { Spacing } from "../../theme/theme";
 import { styles } from "../../styles/profileStyles/MyProfile.styles";
 import { EditBtn } from "./EditBtn";
@@ -27,28 +28,31 @@ export const MyProfile: React.FC<MyProfileProps> = ({
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.heading, { color: colors.text }]}>My Profile</Text>
 
-      <View style={[styles.imageContainer, { backgroundColor: colors.surface, borderColor: colors.background }]}>
+      <Animated.View 
+        entering={FadeIn.duration(800)}
+        style={[styles.imageContainer, { backgroundColor: colors.surface, borderColor: colors.background }]}
+      >
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.profileImage} />
         ) : (
           <Ionicons name="person" size={50} color={colors.textLight} />
         )}
-      </View>
+      </Animated.View>
 
       <View style={styles.infoContainer}>
         <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
 
         <View style={styles.contactInfo}>
-          <Ionicons name="mail-outline" size={16} color={colors.textLight} />
+          <Ionicons name="mail" size={16} color={colors.primary} />
           <Text style={[styles.subText, { color: colors.textLight }]}>{email}</Text>
         </View>
 
         <View style={styles.contactInfo}>
-          <Ionicons name="call-outline" size={16} color={colors.textLight} />
+          <Ionicons name="call" size={16} color={colors.primary} />
           <Text style={[styles.subText, { color: colors.textLight }]}>{phoneNumber}</Text>
         </View>
 
-        <View style={{ marginTop: Spacing.md }}>
+        <View style={{ marginTop: Spacing.lg }}>
           <EditBtn onPress={onEditPress} />
         </View>
       </View>
@@ -57,4 +61,3 @@ export const MyProfile: React.FC<MyProfileProps> = ({
     </View>
   );
 };
-

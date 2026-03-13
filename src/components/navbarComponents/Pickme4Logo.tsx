@@ -9,7 +9,7 @@ export const Pickme4Logo = () => {
   return (
     <View style={styles.container}>
       <View style={[styles.iconWrapper, { backgroundColor: colors.primary }]}>
-        <Ionicons name="flash" size={20} color={colors.background} />
+        <Ionicons name="flash" size={22} color={colors.background} />
       </View>
       <View style={styles.textContainer}>
         <Text style={[styles.brandText, { color: colors.text }]}>

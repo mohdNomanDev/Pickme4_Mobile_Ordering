@@ -1,48 +1,53 @@
-import { StyleSheet } from "react-native";
-import { Colors, Spacing } from "../../theme/theme";
+import { StyleSheet, Platform } from "react-native";
+import { Spacing } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
   container: {
-    marginTop: Spacing.lg,
+    marginTop: Spacing.xl,
   },
   heading: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.text,
-    marginBottom: Spacing.md,
+    fontSize: 18,
+    fontWeight: "800",
+    marginBottom: Spacing.lg,
+    letterSpacing: -0.3,
   },
   addressList: {
-    gap: Spacing.sm,
+    gap: Spacing.md,
   },
   addressItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: Spacing.md,
-    backgroundColor: Colors.background,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    padding: Spacing.lg,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    boxShadow: "0 4 10 rgba(0, 0, 0, 0.03)",
+    elevation: 2,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transition: 'all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1)',
+      } as any,
+    }),
   },
   iconWrapper: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: Colors.surface,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: Spacing.md,
+    marginRight: Spacing.lg,
   },
   addressInfo: {
     flex: 1,
   },
   label: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.text,
-    marginBottom: 2,
+    fontSize: 16,
+    fontWeight: "800",
+    marginBottom: 4,
+    letterSpacing: -0.2,
   },
   details: {
-    fontSize: 12,
-    color: Colors.textLight,
+    fontSize: 13,
+    fontWeight: "500",
   },
 });

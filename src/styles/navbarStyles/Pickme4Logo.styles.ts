@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { Colors, Spacing } from "../../theme/theme";
+import { StyleSheet, Platform } from "react-native";
+import { Spacing } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
   container: {
@@ -7,23 +7,26 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconWrapper: {
-    backgroundColor: Colors.primary,
-    padding: 8,
-    borderRadius: 14,
+    padding: 10,
+    borderRadius: 18,
     marginRight: Spacing.sm,
-    boxShadow: "0 4 5 rgba(255, 107, 107, 0.3)",
-    elevation: 4,
+    boxShadow: "0 6 10 rgba(255, 107, 107, 0.4)",
+    elevation: 8,
   },
   textContainer: {
     justifyContent: "center",
   },
   brandText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "900",
-    color: Colors.text,
-    letterSpacing: -0.8,
+    letterSpacing: -1,
+    ...Platform.select({
+      web: {
+        textShadow: '0px 2px 10px rgba(0,0,0,0.1)',
+      } as any,
+    }),
   },
   numberHighlight: {
-    color: Colors.primary,
+    fontWeight: "900",
   },
 });
