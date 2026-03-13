@@ -12,22 +12,7 @@ import Animated, {
 import { styles } from "../../styles/navbarStyles/SavedAddress.styles";
 import { useThemeColors } from "../../hooks/useThemeColors";
 import { useAppSelector } from "../../store/store";
-
-// Address Interface matching the provided Mongoose schema
-interface Address {
-  _id?: string;
-  label: "Home" | "Work" | "Other";
-  houseNumber: string;
-  buildingName?: string;
-  street: string;
-  landmark?: string;
-  city: string;
-  state: string;
-  country: string;
-  pincode?: string;
-  deliveryInstructions?: string;
-  isDefault: boolean;
-}
+import { Address } from "../../store/slices/addressesSlice";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -55,17 +40,32 @@ const AddressCard = ({
   };
 
   const formatAddress = () => {
-    const parts = [
-      address.houseNumber,
-      address.buildingName,
-      address.street,
-      address.landmark,
+    const mainAddress = [
+      address.buildingNumber,
+      address.streetName,
+      address.district,
+    ].filter(Boolean).join(" ");
+
+    const cityRegion = [
       address.city,
-      address.state,
-      address.pincode,
+      address.region,
+    ].filter(Boolean).join(", ");
+
+    const buildingInfo = [
+      address.buildingName,
+      address.floor ? `Floor ${address.floor}` : null,
+      address.apartmentNumber ? `Apt ${address.apartmentNumber}` : null,
+    ].filter(Boolean).join(", ");
+
+    const parts = [
+      mainAddress,
+      buildingInfo,
+      cityRegion,
+      address.postalCode ? `Postal: ${address.postalCode}` : null,
+      address.landmark ? `Landmark: ${address.landmark}` : null,
     ].filter(Boolean);
 
-    return parts.join(", ");
+    return parts.join(" • ");
   };
 
   const animatedCardStyle = useAnimatedStyle(() => {
@@ -132,6 +132,13 @@ const AddressCard = ({
               <Text style={[styles.label, { color: colors.text }]}>
                 {address.label}
               </Text>
+              {address.shortAddress && (
+                <View style={[styles.shortAddressBadge, { backgroundColor: colors.surface }]}>
+                  <Text style={[styles.shortAddressText, { color: colors.text }]}>
+                    {address.shortAddress}
+                  </Text>
+                </View>
+              )}
               {address.isDefault && (
                 <View
                   style={[

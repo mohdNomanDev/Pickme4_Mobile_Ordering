@@ -4,7 +4,7 @@ import { Spacing } from "../../theme/theme";
 export const styles = StyleSheet.create({
   container: {
     marginTop: Spacing.xl,
-    paddingHorizontal: Platform.OS === "web" ? Spacing.xl : 0, // removed padding for mobile to let it align with other content if needed
+    paddingHorizontal: Platform.OS === "web" ? Spacing.xl : 0,
     width: "100%",
   },
   headerRow: {
@@ -71,11 +71,24 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    flex: 1,
   },
   label: {
     fontSize: 17,
     fontWeight: "700",
     letterSpacing: -0.3,
+  },
+  shortAddressBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+  },
+  shortAddressText: {
+    fontSize: 10,
+    fontWeight: "600",
+    textTransform: "uppercase",
   },
   defaultBadge: {
     paddingHorizontal: 8,
@@ -92,12 +105,13 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     lineHeight: 20,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   bottomRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
+    marginTop: 2,
   },
   instructionsText: {
     fontSize: 13,
