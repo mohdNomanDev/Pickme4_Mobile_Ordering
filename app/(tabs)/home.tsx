@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Navbar } from "../../src/components/navbarComponents/Navbar";
 
 export default function Home() {
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }} edges={["top"]}>
       <Navbar />
