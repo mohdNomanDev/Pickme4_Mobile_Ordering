@@ -4,27 +4,48 @@ import { setAddresses } from "@/store/slices/addressesSlice";
 import { useAppDispatch } from "@/store/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function TabLayout() {
   const dispatch = useAppDispatch();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const data = await api.get("/user/profile");
-        console.log("User profile data fetched:", data);
         if (data) {
+          console.log(data);
           dispatch(setProfile(data));
-          dispatch(setAddresses(data.addresses));
+          if (data.addresses) {
+            dispatch(setAddresses(data.addresses));
+          }
         }
       } catch (error) {
-        console.error(error);
+        console.warn("API Request Failed, using fallback mock data:", error);
+        
+        // Mock profile for testing
+        const mockUser = {
+          id: "123",
+          name: "John Doe",
+          email: "john.doe@example.com",
+          phone: "+1234567890",
+          address: "123 Main St, City, Country",
+          profileImage: "https://via.placeholder.com/150",
+        };
+        dispatch(setProfile(mockUser));
+      } finally {
+        setIsReady(true);
       }
     };
 
     fetchUserProfile();
   }, [dispatch]);
+
+  // Avoid rendering layout before initial state is handled to prevent Web hydration errors
+  if (!isReady && typeof window !== 'undefined') {
+    return null;
+  }
 
   return (
     <Tabs

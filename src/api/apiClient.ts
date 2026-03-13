@@ -1,19 +1,33 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios/dist/axios';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 /**
  * In React Native development:
  * - Web/iOS Simulator: 'localhost' works.
  * - Android Emulator: '10.0.2.2' is the alias for the host machine's localhost.
+ * - Physical Device (Expo Go): Needs the machine's local IP (e.g., 192.168.x.x).
  */
 const getBaseUrl = () => {
   const BASE_PATH = '/ordering';
+  const PORT = '5000';
+
   if (__DEV__) {
-    if (Platform.OS === 'android') {
-      return `http://10.0.2.2:5000${BASE_PATH}`;
+    // Attempt to extract the IP address of the machine running the Expo packager
+    const hostUri = Constants.expoConfig?.hostUri;
+    const debuggerHost = hostUri ? hostUri.split(':')[0] : null;
+
+    if (debuggerHost) {
+      return `http://${debuggerHost}:${PORT}${BASE_PATH}`;
     }
-    return `http://localhost:5000${BASE_PATH}`;
+
+    // Fallbacks for specific environments if hostUri is unavailable
+    if (Platform.OS === 'android') {
+      return `http://10.0.2.2:${PORT}${BASE_PATH}`;
+    }
+    return `http://localhost:${PORT}${BASE_PATH}`;
   }
+
   // Production URL
   return `https://api.yourdomain.com${BASE_PATH}`;
 };
@@ -29,10 +43,6 @@ const apiClient = axios.create({
 
 /**
  * Generic API request handler
- * @param path - The endpoint path (e.g., '/user/profile')
- * @param method - HTTP Method (GET, POST, PUT, DELETE, etc.)
- * @param data - Request body data (for POST/PUT)
- * @param config - Additional Axios configuration
  */
 export const request = async <T = any>(
   path: string,
@@ -54,16 +64,14 @@ export const request = async <T = any>(
       status: error.response?.status,
       data: error.response?.data,
       path: path,
+      fullUrl: `${apiClient.defaults.baseURL}${path}`
     };
     
     console.error('API Request Failed:', errorDetails);
-    
-    // You can implement custom error handling here (e.g., refreshing tokens)
     throw errorDetails;
   }
 };
 
-// Shorthand methods for convenience
 export const api = {
   get: <T = any>(path: string, config?: AxiosRequestConfig) => 
     request<T>(path, 'GET', null, config),
