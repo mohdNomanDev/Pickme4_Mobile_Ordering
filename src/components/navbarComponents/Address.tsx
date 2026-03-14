@@ -82,10 +82,10 @@ export const Address = () => {
                 </Pressable>
               </View>
               
-              <View style={styles.modalBody}>
+              <View style={[styles.modalBody, { flex: 1 }]}>
                 <DetectLocation />
                 <AddAddress onPress={() => setModalVisible(false)} />
-                <SavedAddress />
+                <SavedAddress onSelect={() => setModalVisible(false)} />
               </View>
             </Animated.View>
           </Pressable>

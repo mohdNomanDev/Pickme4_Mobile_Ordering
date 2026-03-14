@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Platform, Pressable, Text, View, ScrollView, Dimensions } from "react-native";
+import { useRouter } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -22,11 +23,15 @@ const AddressCard = ({
   address,
   colors,
   index,
+  onSelect,
 }: {
   address: Address;
   colors: any;
   index: number;
+  onSelect?: () => void;
 }) => {
+  const router = useRouter();
+  const lastTap = React.useRef<number>(0);
   const scale = useSharedValue(1);
   const isHovered = useSharedValue(0);
 
@@ -102,6 +107,27 @@ const AddressCard = ({
     onHoverOut: () => { isHovered.value = withTiming(0, { duration: 300 }); }
   } : {};
 
+  const handlePress = () => {
+    const now = Date.now();
+    const DOUBLE_PRESS_DELAY = 300;
+
+    if (lastTap.current && (now - lastTap.current) < DOUBLE_PRESS_DELAY) {
+      // Double Tap Detected - Open Edit Page
+      console.log(`Double Tap: Editing Address ${address.label}`);
+      if (onSelect) onSelect();
+      router.push({
+        pathname: "/(modals)/edit-address" as any,
+        params: { 
+          id: address._id || address.id,
+          addressData: JSON.stringify(address) // Passing full address data as string
+        }
+      });
+    } else {
+      lastTap.current = now;
+      console.log(`Single Tap: Selected Address ${address.label}`);
+    }
+  };
+
   return (
     <Animated.View
       entering={Platform.OS === 'web' ? undefined : FadeInDown.delay(index * 80).springify().damping(12)}
@@ -112,7 +138,7 @@ const AddressCard = ({
         {...(webHoverProps as any)}
         onPressIn={() => (scale.value = withSpring(0.96))}
         onPressOut={() => (scale.value = withSpring(1))}
-        onPress={() => console.log(`Selected Address: ${address.label}`)}
+        onPress={handlePress}
         style={[styles.card, animatedCardStyle]}
       >
         <Animated.View style={[styles.iconContainer, animatedIconStyle]}>
@@ -188,7 +214,7 @@ const AddressCard = ({
   );
 };
 
-export const SavedAddress = () => {
+export const SavedAddress = ({ onSelect }: { onSelect?: () => void }) => {
   const colors = useThemeColors();
   const addresses = useAppSelector((state) => state.addresses.addresses);
 
@@ -237,6 +263,7 @@ export const SavedAddress = () => {
               address={address}
               colors={colors}
               index={index}
+              onSelect={onSelect}
             />
           ))}
         </ScrollView>
