@@ -54,7 +54,7 @@ export const request = async <T = any>(
     const response: AxiosResponse<T> = await apiClient({
       url: path,
       method,
-      data,
+      ...(data !== null && { data }),
       ...config,
     });
     return response.data;
@@ -77,7 +77,10 @@ export const api = {
     request<T>(path, 'GET', null, config),
     
   post: <T = any>(path: string, data?: any, config?: AxiosRequestConfig) => 
-    request<T>(path, 'POST', data, config)
+    request<T>(path, 'POST', data, config),
+
+  delete: <T = any>(path: string, config?: AxiosRequestConfig) => 
+    request<T>(path, 'DELETE', null, config)
 };
 
 export default apiClient;

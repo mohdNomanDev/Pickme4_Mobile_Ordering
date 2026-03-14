@@ -28,7 +28,7 @@ import { styles } from '../../src/styles/navbarStyles/AddNewAddress.styles';
 import { useAddressForm, AddressFormValues } from '../../src/hooks/useAddressForm';
 import { api } from '../../src/api/apiClient';
 import { useAppDispatch } from '../../src/store/store';
-import { setAddresses } from '../../src/store/slices/addressesSlice';
+import { DeleteAddressBtn } from '../../src/components/profileComponents/DeleteAddressBtn';
 
 // --- Types ---
 interface AnimatedButtonProps {
@@ -220,7 +220,7 @@ export default function EditAddressModal() {
     }
   };
 
-  const formik = useAddressForm(initialData, handleUpdate);
+  const { formik, handleDelete, isDeleting } = useAddressForm(initialData, handleUpdate, params.id as string);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -401,6 +401,29 @@ export default function EditAddressModal() {
                 loading={loading}
               />
             </View>
+          </View>
+
+          {/* 
+            Premium Destructive Action Section
+            Visually separated from the primary actions to prevent accidental taps.
+          */}
+          <View className="mt-12 pb-10 items-center">
+            <View 
+              style={{ backgroundColor: theme.border }} 
+              className="w-full h-[1px] mb-10 opacity-40" 
+            />
+            
+            <DeleteAddressBtn 
+              onPress={handleDelete}
+              isLoading={isDeleting}
+            />
+
+            <Text 
+              className="mt-5 text-[10px] font-bold uppercase tracking-[2px] opacity-30 text-center"
+              style={{ color: theme.text }}
+            >
+              This action cannot be undone
+            </Text>
           </View>
         </Animated.View>
       </ScrollView>
