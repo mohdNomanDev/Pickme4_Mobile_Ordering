@@ -1,9 +1,11 @@
 import { useFormik } from 'formik';
 import { useRouter } from 'expo-router';
 import { addressSchema } from '../utils/validation';
+import { api } from '../api/apiClient';
 
 export interface AddressFormValues {
   label: string;
+  shortAddress: string;
   buildingNumber: string;
   streetName: string;
   district: string;
@@ -11,6 +13,12 @@ export interface AddressFormValues {
   region: string;
   postalCode: string;
   secondaryNumber: string;
+  buildingName: string;
+  apartmentNumber: string;
+  floor: string;
+  landmark: string;
+  latitude: number;
+  longitude: number;
   deliveryInstructions: string;
   isDefault: boolean;
 }
@@ -21,6 +29,7 @@ export const useAddressForm = () => {
   const formik = useFormik<AddressFormValues>({
     initialValues: {
       label: 'Home',
+      shortAddress: '',
       buildingNumber: '',
       streetName: '',
       district: '',
@@ -28,14 +37,25 @@ export const useAddressForm = () => {
       region: '',
       postalCode: '',
       secondaryNumber: '',
+      buildingName: '',
+      apartmentNumber: '',
+      floor: '',
+      landmark: '',
+      latitude: 0,
+      longitude: 0,
       deliveryInstructions: '',
       isDefault: false,
     },
     validationSchema: addressSchema,
-    onSubmit: (values) => {
-      console.log('Saving address data:', values);
-      // Simulate successful save and go back
-      router.back();
+    onSubmit: async (values) => {
+      try {
+        console.log('Saving address data:', values);
+        await api.post('/user/address', values);
+        router.back();
+      } catch (error) {
+        console.error('Failed to save address:', error);
+        // Error handling could be added here, e.g., set status for global form error
+      }
     },
   });
 
