@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View, ScrollView, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,6 +8,8 @@ import Animated, {
   withTiming,
   interpolateColor,
   FadeInDown,
+  Layout,
+  FadeIn,
 } from "react-native-reanimated";
 import { styles } from "../../styles/navbarStyles/SavedAddress.styles";
 import { useThemeColors } from "../../hooks/useThemeColors";
@@ -29,14 +31,10 @@ const AddressCard = ({
   const isHovered = useSharedValue(0);
 
   const getIconName = () => {
-    switch (address.label) {
-      case "Home":
-        return "home";
-      case "Work":
-        return "briefcase";
-      default:
-        return "location";
-    }
+    const label = address.label?.toLowerCase() || "";
+    if (label.includes("home")) return "home";
+    if (label.includes("work") || label.includes("office")) return "briefcase";
+    return "location";
   };
 
   const formatAddress = () => {
@@ -46,23 +44,22 @@ const AddressCard = ({
       address.district,
     ].filter(Boolean).join(" ");
 
-    const cityRegion = [
-      address.city,
-      address.region,
-    ].filter(Boolean).join(", ");
-
     const buildingInfo = [
       address.buildingName,
       address.floor ? `Floor ${address.floor}` : null,
       address.apartmentNumber ? `Apt ${address.apartmentNumber}` : null,
     ].filter(Boolean).join(", ");
 
+    const cityRegion = [
+      address.city,
+      address.region,
+    ].filter(Boolean).join(", ");
+
     const parts = [
       mainAddress,
       buildingInfo,
       cityRegion,
-      address.postalCode ? `Postal: ${address.postalCode}` : null,
-      address.landmark ? `Landmark: ${address.landmark}` : null,
+      address.landmark ? `Near ${address.landmark}` : null,
     ].filter(Boolean);
 
     return parts.join(" • ");
@@ -101,14 +98,14 @@ const AddressCard = ({
   });
 
   const webHoverProps = Platform.OS === 'web' ? {
-    onHoverIn: () => { isHovered.value = withTiming(1, { duration: 250 }); },
-    onHoverOut: () => { isHovered.value = withTiming(0, { duration: 250 }); }
+    onHoverIn: () => { isHovered.value = withTiming(1, { duration: 300 }); },
+    onHoverOut: () => { isHovered.value = withTiming(0, { duration: 300 }); }
   } : {};
 
   return (
     <Animated.View
-      // Simplified entrance to avoid Web Node removal issues
-      entering={Platform.OS === 'web' ? undefined : FadeInDown.delay(index * 100).springify()}
+      entering={Platform.OS === 'web' ? undefined : FadeInDown.delay(index * 80).springify().damping(12)}
+      layout={Platform.OS === 'web' ? undefined : Layout.springify()}
       style={styles.cardWrapper}
     >
       <AnimatedPressable
@@ -120,8 +117,8 @@ const AddressCard = ({
       >
         <Animated.View style={[styles.iconContainer, animatedIconStyle]}>
           <Ionicons
-            name={getIconName()}
-            size={22}
+            name={getIconName() as any}
+            size={24}
             color={colors.primary}
           />
         </Animated.View>
@@ -132,14 +129,14 @@ const AddressCard = ({
               <Text style={[styles.label, { color: colors.text }]}>
                 {address.label}
               </Text>
-              {address.shortAddress && (
-                <View style={[styles.shortAddressBadge, { backgroundColor: colors.surface }]}>
-                  <Text style={[styles.shortAddressText, { color: colors.text }]}>
+              {!!address.shortAddress && (
+                <View style={[styles.shortAddressBadge, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                  <Text style={[styles.shortAddressText, { color: colors.textLight }]}>
                     {address.shortAddress}
                   </Text>
                 </View>
               )}
-              {address.isDefault && (
+              {!!address.isDefault && (
                 <View
                   style={[
                     styles.defaultBadge,
@@ -153,9 +150,10 @@ const AddressCard = ({
               )}
             </View>
             <Ionicons
-              name="chevron-forward"
+              name="chevron-forward-outline"
               size={18}
               color={colors.textLight}
+              style={{ opacity: 0.6 }}
             />
           </View>
 
@@ -166,17 +164,17 @@ const AddressCard = ({
             {formatAddress()}
           </Text>
 
-          {address.deliveryInstructions && (
-            <View style={styles.bottomRow}>
+          {!!address.deliveryInstructions && (
+            <View style={[styles.bottomRow, { borderTopColor: colors.border }]}>
               <Ionicons
-                name="information-circle"
-                size={16}
+                name="chatbubble-ellipses-outline"
+                size={14}
                 color={colors.primary}
               />
               <Text
                 style={[
                   styles.instructionsText,
-                  { color: colors.text },
+                  { color: colors.textLight },
                 ]}
                 numberOfLines={1}
               >
@@ -194,8 +192,20 @@ export const SavedAddress = () => {
   const colors = useThemeColors();
   const addresses = useAppSelector((state) => state.addresses.addresses);
 
-  // Debug log to check data on mobile console
-  console.log("Addresses in Component:", addresses);
+  const renderEmpty = () => (
+    <Animated.View 
+      entering={Platform.OS === 'web' ? undefined : FadeIn.duration(600)}
+      style={[styles.emptyContainer, { borderColor: colors.border }]}
+    >
+      <View style={styles.emptyIconContainer}>
+        <Ionicons name="map-outline" size={40} color={colors.primary} />
+      </View>
+      <Text style={[styles.emptyText, { color: colors.text }]}>No addresses yet</Text>
+      <Text style={[styles.emptySubText, { color: colors.textLight }]}>
+        Add your home or office address for faster delivery and a personalized experience.
+      </Text>
+    </Animated.View>
+  );
 
   return (
     <View style={styles.container}>
@@ -204,14 +214,23 @@ export const SavedAddress = () => {
           Saved Addresses
         </Text>
         <View style={[styles.badge, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.badgeText, { color: colors.textLight }]}>
+          <Text style={[styles.badgeText, { color: colors.primary }]}>
             {addresses?.length || 0} {addresses?.length === 1 ? 'Location' : 'Locations'}
           </Text>
         </View>
       </View>
 
       {addresses && addresses.length > 0 ? (
-        <View style={styles.listContainer}>
+        <ScrollView 
+          style={{ 
+            // Average card height is ~110-120px + gap. 
+            // 380px fits ~3 cards comfortably on most screens.
+            maxHeight: 380, 
+          }}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={true}
+          nestedScrollEnabled={true}
+        >
           {addresses.map((address: Address, index: number) => (
             <AddressCard
               key={address._id || `addr-${index}`}
@@ -220,17 +239,9 @@ export const SavedAddress = () => {
               index={index}
             />
           ))}
-        </View>
+        </ScrollView>
       ) : (
-        <View 
-          style={[styles.emptyContainer, { borderColor: colors.border, backgroundColor: colors.background }]}
-        >
-          <Ionicons name="location-outline" size={54} color={colors.textLight} />
-          <Text style={[styles.emptyText, { color: colors.text }]}>No addresses yet</Text>
-          <Text style={[styles.emptySubText, { color: colors.textLight }]}>
-            Save your home or work address for faster checkout.
-          </Text>
-        </View>
+        renderEmpty()
       )}
     </View>
   );
