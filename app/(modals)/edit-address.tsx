@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   Pressable,
   TextInputProps,
   TextStyle,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, {
@@ -25,6 +27,8 @@ import { ThemeColors } from '../../src/theme/theme';
 import { styles } from '../../src/styles/navbarStyles/AddNewAddress.styles';
 import { useAddressForm, AddressFormValues } from '../../src/hooks/useAddressForm';
 import { api } from '../../src/api/apiClient';
+import { useAppDispatch } from '../../src/store/store';
+import { setAddresses } from '../../src/store/slices/addressesSlice';
 
 // --- Types ---
 interface AnimatedButtonProps {
@@ -33,6 +37,7 @@ interface AnimatedButtonProps {
   theme: ThemeColors;
   isPrimary?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
+  loading?: boolean;
 }
 
 interface InputFieldProps extends TextInputProps {
@@ -50,7 +55,8 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   title, 
   theme, 
   isPrimary = true,
-  icon 
+  icon,
+  loading = false
 }) => {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -63,6 +69,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   return (
     <Pressable
       onPress={onPress}
+      disabled={loading}
       onPressIn={() => (scale.value = withSpring(0.96))}
       onPressOut={() => (scale.value = withSpring(1))}
       // @ts-ignore - Web specific props
@@ -78,25 +85,32 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
             borderColor: isPrimary ? theme.primary : theme.border,
             borderWidth: 1,
             flexDirection: 'row',
+            opacity: loading ? 0.7 : 1,
           },
         ]}
       >
-        {icon && (
-          <Ionicons 
-            name={icon} 
-            size={18} 
-            color={isPrimary ? '#FFFFFF' : theme.text} 
-            style={{ marginRight: 8 }} 
-          />
+        {loading ? (
+          <ActivityIndicator size="small" color={isPrimary ? '#FFFFFF' : theme.primary} />
+        ) : (
+          <>
+            {icon && (
+              <Ionicons 
+                name={icon} 
+                size={18} 
+                color={isPrimary ? '#FFFFFF' : theme.text} 
+                style={{ marginRight: 8 }} 
+              />
+            )}
+            <Text
+              style={[
+                styles.buttonText,
+                { color: isPrimary ? '#FFFFFF' : theme.text },
+              ]}
+            >
+              {title}
+            </Text>
+          </>
         )}
-        <Text
-          style={[
-            styles.buttonText,
-            { color: isPrimary ? '#FFFFFF' : theme.text },
-          ]}
-        >
-          {title}
-        </Text>
       </Animated.View>
     </Pressable>
   );
@@ -148,6 +162,8 @@ export default function EditAddressModal() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const insets = useSafeAreaInsets();
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
   
   // Parse address data from params
   const initialData = useMemo(() => {
@@ -182,11 +198,25 @@ export default function EditAddressModal() {
 
   const handleUpdate = async (values: AddressFormValues) => {
     try {
+      setLoading(true);
       console.log('Updating address:', params.id, values);
-      await api.put(`/user/address/${params.id}`, values);
-      router.back();
-    } catch (error) {
+      
+      const response = await api.post(`/user/address/${params.id}`, values);
+      
+      if (response && response.addresses) {
+        dispatch(setAddresses(response.addresses));
+        router.back();
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error: any) {
       console.error('Failed to update address:', error);
+      Alert.alert(
+        'Update Failed',
+        error.data?.message || 'Something went wrong while updating the address.'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -368,6 +398,7 @@ export default function EditAddressModal() {
                 isPrimary={true} 
                 onPress={formik.handleSubmit} 
                 icon="save-outline"
+                loading={loading}
               />
             </View>
           </View>
