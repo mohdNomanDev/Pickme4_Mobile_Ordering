@@ -9,6 +9,7 @@ import {
   Pressable,
   TextInputProps,
   TextStyle,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, {
@@ -31,6 +32,7 @@ interface AnimatedButtonProps {
   theme: ThemeColors;
   isPrimary?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
+  loading?: boolean;
 }
 
 interface InputFieldProps extends TextInputProps {
@@ -48,7 +50,8 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   title, 
   theme, 
   isPrimary = true,
-  icon 
+  icon,
+  loading = false
 }) => {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -61,6 +64,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   return (
     <Pressable
       onPress={onPress}
+      disabled={loading}
       onPressIn={() => (scale.value = withSpring(0.96))}
       onPressOut={() => (scale.value = withSpring(1))}
       // @ts-ignore - Web specific props
@@ -76,25 +80,32 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
             borderColor: isPrimary ? theme.primary : theme.border,
             borderWidth: 1,
             flexDirection: 'row',
+            opacity: loading ? 0.7 : 1,
           },
         ]}
       >
-        {icon && (
-          <Ionicons 
-            name={icon} 
-            size={18} 
-            color={isPrimary ? '#FFFFFF' : theme.text} 
-            style={{ marginRight: 8 }} 
-          />
+        {loading ? (
+          <ActivityIndicator size="small" color={isPrimary ? '#FFFFFF' : theme.primary} />
+        ) : (
+          <>
+            {icon && (
+              <Ionicons 
+                name={icon} 
+                size={18} 
+                color={isPrimary ? '#FFFFFF' : theme.text} 
+                style={{ marginRight: 8 }} 
+              />
+            )}
+            <Text
+              style={[
+                styles.buttonText,
+                { color: isPrimary ? '#FFFFFF' : theme.text },
+              ]}
+            >
+              {title}
+            </Text>
+          </>
         )}
-        <Text
-          style={[
-            styles.buttonText,
-            { color: isPrimary ? '#FFFFFF' : theme.text },
-          ]}
-        >
-          {title}
-        </Text>
       </Animated.View>
     </Pressable>
   );
@@ -145,7 +156,7 @@ const InputField: React.FC<InputFieldProps> = ({
 export default function AddAddressForm() {
   const theme = useThemeColors();
   const router = useRouter();
-  const formik = useAddressForm();
+  const { formik, loading } = useAddressForm();
 
   return (
     <ScrollView 
@@ -285,6 +296,7 @@ export default function AddAddressForm() {
               isPrimary={true} 
               onPress={formik.handleSubmit} 
               icon="save-outline"
+              loading={loading}
             />
           </View>
         </View>

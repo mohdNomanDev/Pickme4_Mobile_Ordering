@@ -162,8 +162,6 @@ export default function EditAddressModal() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const insets = useSafeAreaInsets();
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(false);
   
   // Parse address data from params
   const initialData = useMemo(() => {
@@ -196,31 +194,7 @@ export default function EditAddressModal() {
     return undefined;
   }, [params.addressData]);
 
-  const handleUpdate = async (values: AddressFormValues) => {
-    try {
-      setLoading(true);
-      console.log('Updating address:', params.id, values);
-      
-      const response = await api.post(`/user/address/${params.id}`, values);
-      
-      if (response && response.addresses) {
-        dispatch(setAddresses(response.addresses));
-        router.back();
-      } else {
-        throw new Error('Invalid response from server');
-      }
-    } catch (error: any) {
-      console.error('Failed to update address:', error);
-      Alert.alert(
-        'Update Failed',
-        error.data?.message || 'Something went wrong while updating the address.'
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const { formik, handleDelete, isDeleting } = useAddressForm(initialData, handleUpdate, params.id as string);
+  const { formik, handleDelete, isDeleting, loading } = useAddressForm(initialData, params.id as string);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>

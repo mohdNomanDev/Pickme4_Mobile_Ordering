@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import { useRouter } from 'expo-router';
 import { Alert, Platform } from 'react-native';
 import { addressSchema } from '../utils/validation';
-import { api } from '../api/apiClient';
 import { useAppDispatch } from '../store/store';
 import { setAddresses } from '../store/slices/addressesSlice';
+import { addressService } from '../api/addressService';
 
 export interface AddressFormValues {
   label: string;
@@ -49,11 +49,11 @@ const defaultInitialValues: AddressFormValues = {
 
 export const useAddressForm = (
   initialValues: AddressFormValues = defaultInitialValues,
-  customSubmit?: (values: AddressFormValues) => Promise<void>,
   addressId?: string
 ) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const formik = useFormik<AddressFormValues>({
@@ -61,16 +61,29 @@ export const useAddressForm = (
     enableReinitialize: true,
     validationSchema: addressSchema,
     onSubmit: async (values) => {
-      if (customSubmit) {
-        await customSubmit(values);
-      } else {
-        try {
-          console.log('Saving address data:', values);
-          await api.post('/user/address', values);
-          router.back();
-        } catch (error) {
-          console.error('Failed to save address:', error);
+      try {
+        setLoading(true);
+        let response;
+        if (addressId) {
+          response = await addressService.update(addressId, values);
+        } else {
+          response = await addressService.create(values);
         }
+
+        if (response && response.addresses) {
+          dispatch(setAddresses(response.addresses));
+          router.back();
+        } else {
+          throw new Error('Invalid response from server');
+        }
+      } catch (error: any) {
+        console.error('Failed to save address:', error);
+        const errorMessage = error.data?.message || error.message || 'Something went wrong while saving the address.';
+        if (Platform.OS !== 'web') {
+          Alert.alert('Save Failed', errorMessage);
+        }
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -81,8 +94,7 @@ export const useAddressForm = (
     const performDelete = async () => {
       try {
         setIsDeleting(true);
-        // Using api.delete to match updated backend route: .delete(deleteUserAddress)
-        const response = await api.delete(`/user/address/${addressId}`);
+        const response = await addressService.delete(addressId);
 
         if (response && response.addresses) {
           dispatch(setAddresses(response.addresses));
@@ -91,8 +103,6 @@ export const useAddressForm = (
           throw new Error('Failed to delete address');
         }
       } catch (error: any) {
-
-
         console.error('Failed to delete address:', error);
         const errorMessage = error.data?.message || error.message || 'Something went wrong while deleting the address.';
         if (Platform.OS !== 'web') {
@@ -126,6 +136,8 @@ export const useAddressForm = (
   return {
     formik,
     handleDelete,
-    isDeleting
+    isDeleting,
+    loading
   };
 };
+
