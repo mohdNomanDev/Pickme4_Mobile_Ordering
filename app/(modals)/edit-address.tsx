@@ -19,6 +19,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../src/hooks/useThemeColors';
 import { ThemeColors } from '../../src/theme/theme';
 import { styles } from '../../src/styles/navbarStyles/AddNewAddress.styles';
@@ -146,6 +147,7 @@ export default function EditAddressModal() {
   const theme = useThemeColors();
   const router = useRouter();
   const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   
   // Parse address data from params
   const initialData = useMemo(() => {
@@ -192,16 +194,38 @@ export default function EditAddressModal() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
-      {/* Header View to match modal title style */}
+      {/* Header View with Safe Area handling */}
       <View style={{ 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
         paddingHorizontal: 20, 
-        paddingTop: 20,
-        marginBottom: 10
+        paddingTop: Platform.OS === 'ios' ? insets.top : insets.top + 10,
+        paddingBottom: 15,
+        backgroundColor: theme.background,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.border,
       }}>
-        <Text style={{ fontSize: 24, fontWeight: '900', color: theme.text, letterSpacing: -0.5 }}>Edit Address</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable 
+            onPress={() => router.back()}
+            style={({ pressed }) => ({
+              opacity: pressed ? 0.7 : 1,
+              padding: 5,
+            })}
+          >
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
+          </Pressable>
+          <Text style={{ 
+            marginLeft: 20, 
+            fontSize: 18, 
+            fontWeight: '700', 
+            color: theme.text,
+            letterSpacing: 0.5 
+          }}>
+            Edit Address
+          </Text>
+        </View>
         <Pressable onPress={() => router.back()}>
           <Ionicons name="close-circle" size={32} color={theme.textLight} />
         </Pressable>
