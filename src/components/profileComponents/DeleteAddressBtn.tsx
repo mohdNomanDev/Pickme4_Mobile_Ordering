@@ -66,45 +66,49 @@ export const DeleteAddressBtn: React.FC<DeleteAddressBtnProps> = ({
   };
 
   return (
-    <AnimatedPressable
+    <Animated.View 
       entering={FadeInUp.duration(600).delay(300).springify()}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      onPress={handlePress}
-      disabled={isLoading}
-      // Web-only hover feedback via opacity for a sleek feel
-      onPointerEnter={() => {
-        if (Platform.OS === 'web') hoverOpacity.value = 0.9;
-      }}
-      onPointerLeave={() => {
-        if (Platform.OS === 'web') hoverOpacity.value = 1;
-      }}
-      className={`
-        w-full flex-row items-center justify-center 
-        py-4 px-6 rounded-2xl
-        bg-red-500 dark:bg-red-600
-        shadow-lg shadow-red-500/30 dark:shadow-black/40
-        active:bg-red-600 dark:active:bg-red-700
-        min-h-[56px]
-        ${className}
-      `}
-      style={animatedStyle}
+      className="w-full"
     >
-      {isLoading ? (
-        <View className="flex-row items-center justify-center gap-3">
-          <ActivityIndicator color="white" size="small" />
-          <Text className="text-white font-bold text-base tracking-wide uppercase">
-            Processing...
-          </Text>
-        </View>
-      ) : (
-        <View className="flex-row items-center justify-center gap-3">
-          <Feather name="trash-2" size={20} color="white" />
-          <Text className="text-white font-bold text-base tracking-wide">
-            Delete Address
-          </Text>
-        </View>
-      )}
-    </AnimatedPressable>
+      <AnimatedPressable
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={handlePress}
+        disabled={isLoading}
+        // Web-only hover feedback via opacity for a sleek feel
+        onPointerEnter={() => {
+          if (Platform.OS === 'web') hoverOpacity.value = 0.9;
+        }}
+        onPointerLeave={() => {
+          if (Platform.OS === 'web') hoverOpacity.value = 1;
+        }}
+        className={`
+          flex-row items-center justify-center 
+          py-4 px-6 rounded-2xl
+          bg-red-500 dark:bg-red-600
+          shadow-lg shadow-red-500/30 dark:shadow-black/40
+          active:bg-red-600 dark:active:bg-red-700
+          min-h-[56px]
+          ${className}
+        `}
+        style={animatedStyle}
+      >
+        {isLoading ? (
+          <View className="flex-row items-center justify-center gap-3">
+            <ActivityIndicator color="white" size="small" />
+            <Text className="text-white font-bold text-base tracking-wide uppercase">
+              Processing...
+            </Text>
+          </View>
+        ) : (
+          <View className="flex-row items-center justify-center gap-3">
+            <Feather name="trash-2" size={20} color="white" />
+            <Text className="text-white font-bold text-base tracking-wide">
+              Delete Address
+            </Text>
+          </View>
+        )}
+      </AnimatedPressable>
+    </Animated.View>
   );
 };
