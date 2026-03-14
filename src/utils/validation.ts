@@ -37,19 +37,3 @@ export const addressSchema = Yup.object().shape({
   isDefault: Yup.boolean(),
 });
 
-/**
- * Common regex patterns
- */
-export const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-/**
- * Auth Schemas example
- */
-export const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
-});
