@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Image, TouchableOpacity, Modal, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
@@ -13,7 +13,7 @@ interface ProfileProps {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const Profile: React.FC<ProfileProps> = ({ imageUri }) => {
+export const Profile: React.FC<ProfileProps> = React.memo(({ imageUri }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useThemeColors();
   const scale = useSharedValue(1);
@@ -24,6 +24,17 @@ export const Profile: React.FC<ProfileProps> = ({ imageUri }) => {
     };
   });
 
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.9, { damping: 12 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 12 });
+  }, [scale]);
+
+  const openModal = useCallback(() => setModalVisible(true), []);
+  const closeModal = useCallback(() => setModalVisible(false), []);
+
   return (
     <View>
       <AnimatedPressable 
@@ -32,9 +43,9 @@ export const Profile: React.FC<ProfileProps> = ({ imageUri }) => {
           animatedStyle,
           { backgroundColor: colors.surface, borderColor: colors.border }
         ]} 
-        onPress={() => setModalVisible(true)}
-        onPressIn={() => (scale.value = withSpring(0.9, { damping: 12 }))}
-        onPressOut={() => (scale.value = withSpring(1, { damping: 12 }))}
+        onPress={openModal}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.image} />
@@ -47,11 +58,11 @@ export const Profile: React.FC<ProfileProps> = ({ imageUri }) => {
         animationType="slide"
         transparent={false}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={closeModal}
       >
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
           <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
-            <TouchableOpacity onPress={() => setModalVisible(false)} activeOpacity={0.7}>
+            <TouchableOpacity onPress={closeModal} activeOpacity={0.7}>
               <Ionicons name="close-outline" size={32} color={colors.text} />
             </TouchableOpacity>
           </View>
@@ -60,4 +71,4 @@ export const Profile: React.FC<ProfileProps> = ({ imageUri }) => {
       </Modal>
     </View>
   );
-};
+});

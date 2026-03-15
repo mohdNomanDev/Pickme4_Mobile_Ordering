@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Platform } from "react-native";
 import { BlurView } from "expo-blur";
 import { styles } from "../../styles/navbarStyles/Navbar.styles";
@@ -7,7 +8,7 @@ import { SearchBar } from "./SearchBar";
 import { Profile } from "./Profile";
 import { useThemeColors } from "../../hooks/useThemeColors";
 
-export const Navbar = () => {
+export const Navbar = React.memo(() => {
   const colors = useThemeColors();
   const isDark = colors.background === "#1A202C"; // Assuming default dark theme color
   
@@ -35,4 +36,4 @@ export const Navbar = () => {
       </BlurView>
     </View>
   );
-};
+});

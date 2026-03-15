@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { View, Text, Modal, Pressable, Platform, useWindowDimensions, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { 
@@ -22,7 +22,7 @@ import { Spacing } from "../../theme/theme";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const Address = () => {
+export const Address = React.memo(() => {
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useThemeColors();
   const { width, height: screenHeight } = useWindowDimensions();
@@ -39,7 +39,7 @@ export const Address = () => {
     if (modalVisible) {
       sheetHeight.value = withSpring(INITIAL_HEIGHT, { damping: 20 });
     }
-  }, [modalVisible]);
+  }, [modalVisible, INITIAL_HEIGHT, sheetHeight]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -50,19 +50,27 @@ export const Address = () => {
     backgroundColor: colors.background,
   }));
 
-  const handlePressIn = () => {
+  const handlePressIn = useCallback(() => {
     scale.value = withSpring(0.95, { damping: 15, stiffness: 200 });
-  };
+  }, [scale]);
 
-  const handlePressOut = () => {
+  const handlePressOut = useCallback(() => {
     scale.value = withSpring(1, { damping: 15, stiffness: 200 });
-  };
+  }, [scale]);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setModalVisible(false);
-  };
+  }, []);
 
-  const panGesture = Gesture.Pan()
+  const openModal = useCallback(() => {
+    setModalVisible(true);
+  }, []);
+
+  const stopPropagation = useCallback((e: any) => {
+    e.stopPropagation();
+  }, []);
+
+  const panGesture = useMemo(() => Gesture.Pan()
     .onStart(() => {
       context.value = sheetHeight.value;
     })
@@ -83,19 +91,21 @@ export const Address = () => {
       } else {
         sheetHeight.value = withSpring(sheetHeight.value);
       }
-    });
+    }), [context, sheetHeight, MIN_HEIGHT, MAX_HEIGHT, closeModal]);
 
   const isDark = colors.background === "#1A202C";
+
+  const containerStyle = useMemo(() => [
+    styles.container,
+    animatedStyle,
+    { backgroundColor: colors.surface }
+  ], [animatedStyle, colors.surface]);
 
   return (
     <View>
       <AnimatedPressable 
-        style={[
-          styles.container,
-          animatedStyle,
-          { backgroundColor: colors.surface }
-        ]} 
-        onPress={() => setModalVisible(true)}
+        style={containerStyle} 
+        onPress={openModal}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
@@ -125,7 +135,7 @@ export const Address = () => {
               tint={isDark ? "dark" : "light"} 
               style={styles.blurOverlay} 
             />
-            <Pressable onPress={(e) => e.stopPropagation()}>
+            <Pressable onPress={stopPropagation}>
               <Animated.View 
                 entering={FadeInUp.springify().damping(20)}
                 exiting={FadeOutDown.springify().damping(20)}
@@ -157,7 +167,7 @@ export const Address = () => {
       </Modal>
     </View>
   );
-};
+});
 
 const localStyles = StyleSheet.create({
   dragHandleArea: {

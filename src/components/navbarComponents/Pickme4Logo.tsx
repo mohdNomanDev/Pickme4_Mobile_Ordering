@@ -1,9 +1,10 @@
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import { styles } from "../../styles/navbarStyles/Pickme4Logo.styles";
 import { useThemeColors } from "../../hooks/useThemeColors";
 
-export const Pickme4Logo = () => {
+export const Pickme4Logo = React.memo(() => {
   const colors = useThemeColors();
   
   return (
@@ -18,4 +19,4 @@ export const Pickme4Logo = () => {
       </View>
     </View>
   );
-};
+});

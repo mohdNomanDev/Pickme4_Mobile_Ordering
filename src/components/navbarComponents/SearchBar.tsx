@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { TextInput, View, Pressable, Platform } from "react-native";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
 import { searchBarStyles } from "../../styles/navbarStyles/SearchBar.styles";
@@ -12,7 +12,7 @@ interface SearchBarProps {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const SearchBar: React.FC<SearchBarProps> = ({
+export const SearchBar: React.FC<SearchBarProps> = React.memo(({
   placeholder = "Search food, grocery, etc...",
 }) => {
   const router = useRouter();
@@ -26,6 +26,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     };
   });
 
+  const handlePressIn = useCallback(() => {
+    filterScale.value = withSpring(0.9, { damping: 12 });
+  }, [filterScale]);
+
+  const handlePressOut = useCallback(() => {
+    filterScale.value = withSpring(1, { damping: 12 });
+  }, [filterScale]);
+
+  const navigateToSearch = useCallback(() => {
+    router.push("/(modals)/search");
+  }, [router]);
+
   return (
     <View style={searchBarStyles.wrapper}>
       <View style={searchBarStyles.container}>
@@ -37,7 +49,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               borderColor: isFocused ? colors.primary : colors.border 
             }
           ]}
-          onPress={() => router.push("/(modals)/search")}
+          onPress={navigateToSearch}
         >
           <Ionicons
             name="search"
@@ -63,11 +75,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           filterAnimatedStyle,
           { backgroundColor: colors.surface, borderColor: colors.border }
         ]}
-        onPressIn={() => (filterScale.value = withSpring(0.9, { damping: 12 }))}
-        onPressOut={() => (filterScale.value = withSpring(1, { damping: 12 }))}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
         <Ionicons name="options" size={24} color={colors.text} />
       </AnimatedPressable>
     </View>
   );
-};
+});

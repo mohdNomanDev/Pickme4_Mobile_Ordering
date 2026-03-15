@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Platform, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,14 +12,32 @@ const FOOD_RECOMMENDATIONS = ['Biryani', 'Chicken Tikka', 'Paneer Butter Masala'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export default function SearchModal() {
+const SearchModal = () => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const colors = useThemeColors();
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     router.back();
-  };
+  }, [router]);
+
+  const clearQuery = useCallback(() => setQuery(''), []);
+
+  const renderFoodItem = useCallback(({ item, index }: { item: string, index: number }) => (
+    <Animated.View entering={FadeInRight.delay(400 + index * 100)}>
+      <AnimatedPressable 
+        style={({ pressed }) => [
+          styles.foodItem,
+          { transform: [{ scale: pressed ? 0.95 : 1 }] }
+        ]}
+      >
+        <View style={[styles.foodIconPlaceholder, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Ionicons name="restaurant" size={28} color={colors.primary} />
+        </View>
+        <Text style={[styles.foodText, { color: colors.text }]}>{item}</Text>
+      </AnimatedPressable>
+    </Animated.View>
+  ), [colors]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -41,7 +59,7 @@ export default function SearchModal() {
             onChangeText={setQuery}
           />
           {query.length > 0 && (
-            <TouchableOpacity onPress={() => setQuery('')}>
+            <TouchableOpacity onPress={clearQuery}>
               <Ionicons name="close-circle" size={20} color={colors.textLight} />
             </TouchableOpacity>
           )}
@@ -74,21 +92,7 @@ export default function SearchModal() {
             keyExtractor={(item) => item}
             horizontal
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => (
-              <Animated.View entering={FadeInRight.delay(400 + index * 100)}>
-                <AnimatedPressable 
-                  style={({ pressed }) => [
-                    styles.foodItem,
-                    { transform: [{ scale: pressed ? 0.95 : 1 }] }
-                  ]}
-                >
-                  <View style={[styles.foodIconPlaceholder, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                     <Ionicons name="restaurant" size={28} color={colors.primary} />
-                  </View>
-                  <Text style={[styles.foodText, { color: colors.text }]}>{item}</Text>
-                </AnimatedPressable>
-              </Animated.View>
-            )}
+            renderItem={renderFoodItem}
             contentContainerStyle={styles.foodList}
           />
         </View>
@@ -96,6 +100,8 @@ export default function SearchModal() {
     </SafeAreaView>
   );
 }
+
+export default React.memo(SearchModal);
 
 const styles = StyleSheet.create({
   container: {
